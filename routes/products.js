@@ -14,14 +14,23 @@ router.get('/search', async (req, res) => {
         }).populate('category subcategory');
         res.json(products);
     } catch (error) {
-        res.status(500).json({ error: 'Search failed' });
+        console.error('Search Error:', error);
+        res.status(500).json({ error: 'Search failed: ' + error.message });
     }
 });
 
 router.get('/filter', async (req, res) => {
     const { category, subcategory, minPrice, maxPrice } = req.query;
     let filter = {};
-    if (category) filter.category = category;
+
+    if (category) {
+        if (category.includes(',')) {
+            filter.category = { $in: category.split(',') };
+        } else {
+            filter.category = category;
+        }
+    }
+
     if (subcategory) filter.subcategory = subcategory;
     if (minPrice || maxPrice) {
         filter.price = {};
@@ -33,7 +42,8 @@ router.get('/filter', async (req, res) => {
         const products = await Product.find(filter).populate('category subcategory');
         res.json(products);
     } catch (error) {
-        res.status(500).json({ error: 'Filter failed' });
+        console.error('Filter Error:', error);
+        res.status(500).json({ error: 'Filter failed: ' + error.message });
     }
 });
 
@@ -43,7 +53,8 @@ router.get('/:id', async (req, res) => {
         if (!product) return res.redirect('/');
         res.render('product_details', { product });
     } catch (error) {
-        res.status(500).send('Server Error');
+        console.error('Product Detail Error:', error);
+        res.status(500).send('Server Error: ' + error.message);
     }
 });
 

@@ -50,7 +50,8 @@ router.get('/history', async (req, res) => {
         const orders = await Order.find({ user: req.session.user.id }).populate('items.product');
         res.render('order_history', { orders });
     } catch (error) {
-        res.status(500).send('Server Error');
+        console.error('Orders History Error:', error);
+        res.status(500).send('Server Error: ' + error.message);
     }
 });
 

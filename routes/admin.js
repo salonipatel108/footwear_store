@@ -40,7 +40,8 @@ router.get('/', async (req, res) => {
             orders
         });
     } catch (error) {
-        res.status(500).send('Server Error');
+        console.error('Admin Error:', error);
+        res.status(500).send('Server Error: ' + error.message);
     }
 });
 

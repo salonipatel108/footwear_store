@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const Category = require('../models/Category');
+const Subcategory = require('../models/Subcategory'); // Added Subcategory import
 
 router.get('/', async (req, res) => {
     // Redirect to login if not authenticated
@@ -13,12 +14,21 @@ router.get('/', async (req, res) => {
         const { category } = req.query;
         const categories = await Category.find();
         let filter = {};
-        if (category) filter.category = category;
+
+        if (category) {
+            // Handle multiple category IDs (comma separated)
+            if (category.includes(',')) {
+                filter.category = { $in: category.split(',') };
+            } else {
+                filter.category = category;
+            }
+        }
 
         const products = await Product.find(filter).populate('category subcategory');
         res.render('index', { products, categories, selectedCategory: category || null });
     } catch (error) {
-        res.status(500).send('Server Error');
+        console.error('Error in index route:', error);
+        res.status(500).send('Server Error: ' + error.message);
     }
 });
 

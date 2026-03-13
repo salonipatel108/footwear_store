@@ -31,7 +31,8 @@ router.post('/register', async (req, res) => {
         // Redirect to login page after registration
         res.redirect('/auth/login?registered=true');
     } catch (error) {
-        res.status(500).send('Server Error');
+        console.error('Registration Error:', error);
+        res.status(500).send('Server Error: ' + error.message);
     }
 });
 
@@ -59,7 +60,8 @@ router.post('/login', async (req, res) => {
             res.redirect('/');
         }
     } catch (error) {
-        res.status(500).send('Server Error');
+        console.error('Login Error:', error);
+        res.status(500).send('Server Error: ' + error.message);
     }
 });
 
