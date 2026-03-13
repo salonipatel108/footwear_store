@@ -1,0 +1,198 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5 py-5">
+        <div class="row g-5">
+            <!-- Billing Details -->
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-5 p-5">
+                    <h4 class="fw-bold mb-4">Shipping Information</h4>
+                    <form id="checkoutForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">First Name</label>
+                                <input type="text" class="form-control rounded-3 py-2" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Last Name</label>
+                                <input type="text" class="form-control rounded-3 py-2" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted">Email Address</label>
+                                <input type="email" class="form-control rounded-3 py-2"
+                                    value="<%= user ? user.email : '' %>" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small fw-bold text-muted">Street Address</label>
+                                <input type="text" class="form-control rounded-3 py-2" name="street"
+                                    placeholder="House number and street name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Town / City</label>
+                                <input type="text" class="form-control rounded-3 py-2" name="city" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">State / County</label>
+                                <input type="text" class="form-control rounded-3 py-2" name="state" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Postcode / ZIP</label>
+                                <input type="text" class="form-control rounded-3 py-2" name="zip" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Phone</label>
+                                <input type="tel" class="form-control rounded-3 py-2"
+                                    value="<%= user ? user.contact : '' %>" required>
+                            </div>
+                        </div>
+
+                        <h4 class="fw-bold mt-5 mb-4">Payment Method</h4>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div
+                                    class="form-check p-3 border border-light rounded-4 mb-2 hover-shadow transition-all">
+                                    <input class="form-check-input ms-0 me-3" type="radio" name="payment" id="cod"
+                                        value="COD" checked>
+                                    <label class="form-check-label fw-bold py-1" for="cod">
+                                        <i class="fas fa-truck me-2 text-primary"></i> Cash on Delivery (COD)
+                                    </label>
+                                </div>
+                                <div
+                                    class="form-check p-3 border border-light rounded-4 mb-2 hover-shadow transition-all">
+                                    <input class="form-check-input ms-0 me-3" type="radio" name="payment" id="card"
+                                        value="Card">
+                                    <label class="form-check-label fw-bold py-1" for="card">
+                                        <i class="fas fa-credit-card me-2 text-primary"></i> Credit / Debit Card
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-lg rounded-5 p-4 sticky-top" style="top: 100px;">
+                    <h5 class="fw-bold mb-4">Review Your Order</h5>
+                    <div id="checkoutItems" class="mb-4">
+                        <!-- Items will be injected by JS -->
+                    </div>
+
+                    <div class="bg-light rounded-4 p-4 mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Subtotal</span>
+                            <span id="subtotalPrice" class="fw-bold">$0.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Shipping</span>
+                            <span class="text-success fw-bold">FREE</span>
+                        </div>
+                        <hr class="my-3 opacity-10">
+                        <div class="d-flex justify-content-between">
+                            <span class="h5 fw-bold mb-0">Total</span>
+                            <span id="finalTotalPrice" class="h5 fw-bold text-primary mb-0">$0.00</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold" onclick="placeOrder()">
+                        Place Order Now <i class="fas fa-check-circle ms-2"></i>
+                    </button>
+                    <p class="text-center text-muted small mt-3">
+                        <i class="fas fa-lock me-1"></i> Secure SSL Encrypted Checkout
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        if (cart.length === 0) window.location.href = '/cart';
+
+        function renderCheckout() {
+            const container = document.getElementById('checkoutItems');
+            let total = 0;
+            container.innerHTML = cart.map(item => {
+                total += item.price;
+                return `
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-light rounded-3 p-1 me-3" style="width: 50px; height: 50px;">
+                        <img src="/uploads/${item.image}" class="w-100 h-100" style="object-fit: contain;" onerror="this.src='https://via.placeholder.com/50?text=Shoe'">
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold text-dark text-truncate" style="max-width: 180px;">${item.title}</div>
+                        <div class="text-muted extra-small">QTY: 1</div>
+                    </div>
+                    <div class="fw-bold text-dark small">$${item.price}</div>
+                </div>
+            `;
+            }).join('');
+
+            document.getElementById('subtotalPrice').innerText = '$' + total.toFixed(2);
+            document.getElementById('finalTotalPrice').innerText = '$' + total.toFixed(2);
+        }
+
+        async function placeOrder() {
+            const formSelectors = ['street', 'city', 'state', 'zip'];
+            const address = {};
+            let valid = true;
+
+            formSelectors.forEach(name => {
+                const val = document.querySelector(`input[name="${name}"]`).value;
+                if (!val) valid = false;
+                address[name] = val;
+            });
+
+            if (!valid) return alert('Please fill in all shipping details!');
+
+            const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+
+            try {
+                const res = await fetch('/orders/place', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        items: cart,
+                        totalAmount: cart.reduce((acc, item) => acc + item.price, 0),
+                        address,
+                        paymentMethod
+                    })
+                });
+
+                const data = await res.json();
+                if (res.ok) {
+                    localStorage.removeItem('cart');
+                    window.location.href = '/orders/success?id=' + data.orderId;
+                } else {
+                    alert(data.error || 'Checkouts require you to be logged in!');
+                    if (data.error === 'Login required') {
+                        // Open login modal
+                        const modal = new bootstrap.Modal(document.getElementById('loginModal'));
+                        modal.show();
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Failed to place order');
+            }
+        }
+
+        renderCheckout();
+    </script>
+
+    <style>
+        .extra-small {
+            font-size: 0.75rem;
+        }
+
+        .hover-shadow:hover {
+            border-color: var(--primary) !important;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .transition-all {
+            transition: 0.3s;
+        }
+    </style>
+
+    <%- include('partials/footer') %>

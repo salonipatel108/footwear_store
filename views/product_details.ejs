@@ -1,0 +1,176 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5 py-5">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none text-muted">Home</a></li>
+                <li class="breadcrumb-item"><a href="/#productGrid" class="text-decoration-none text-muted">
+                        <%= product.category ? product.category.name : 'All Products' %>
+                    </a></li>
+                <li class="breadcrumb-item active fw-bold text-dark" aria-current="page">
+                    <%= product.title %>
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row g-5">
+            <!-- Product Image Gallery -->
+            <div class="col-lg-6">
+                <div class="product-gallery bg-white p-4 rounded-5 shadow-sm border border-light overflow-hidden">
+                    <div class="main-image-container position-relative">
+                        <% if (product.image) { %>
+                            <img src="/uploads/<%= product.image %>" class="img-fluid w-100 rounded-4"
+                                alt="<%= product.title %>" style="max-height: 500px; object-fit: contain;">
+                            <% } else { %>
+                                <img src="https://via.placeholder.com/600x600?text=Premium+Footwear"
+                                    class="img-fluid w-100 rounded-4" alt="No image">
+                                <% } %>
+                                    <div class="badge-featured position-absolute top-0 start-0 m-3">
+                                        <span
+                                            class="badge bg-dark rounded-pill px-3 py-2 uppercase letter-spacing-1">Premium
+                                            Collection</span>
+                                    </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="col-lg-6">
+                <div class="ps-lg-4">
+                    <div class="mb-2">
+                        <span class="text-primary fw-bold text-uppercase tracking-wider small">
+                            <%= product.brand %>
+                        </span>
+                    </div>
+                    <h1 class="display-5 fw-bold text-dark mb-3">
+                        <%= product.title %>
+                    </h1>
+
+                    <div class="d-flex align-items-center mb-4 gap-3">
+                        <div class="h3 fw-bold text-primary mb-0">$<%= product.price %>
+                        </div>
+                        <div class="ms-auto">
+                            <% if (product.stock> 10) { %>
+                                <span
+                                    class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-2">
+                                    <i class="fas fa-check-circle me-1"></i> Highly Available
+                                </span>
+                                <% } else if (product.stock> 0) { %>
+                                    <span
+                                        class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2">
+                                        <i class="fas fa-exclamation-circle me-1"></i> Only <%= product.stock %> items
+                                            left
+                                    </span>
+                                    <% } else { %>
+                                        <span
+                                            class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill px-3 py-2">
+                                            <i class="fas fa-clock me-1"></i> Out of Stock
+                                        </span>
+                                        <% } %>
+                        </div>
+                    </div>
+
+                    <div class="product-description mb-4 p-4 bg-white rounded-4 border border-light">
+                        <h6 class="fw-bold mb-3 text-uppercase small text-muted">Description</h6>
+                        <p class="text-muted leading-relaxed mb-0">
+                            <%= product.description
+                                || 'Experience ultimate comfort and style with our curated footwear. This pair is designed for those who value both aesthetics and durability.'
+                                %>
+                        </p>
+                    </div>
+
+                    <div class="features-list row g-3 mb-5">
+                        <div class="col-6">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="btn btn-light rounded-circle shadow-none p-0 d-flex align-items-center justify-content-center"
+                                    style="width:32px; height:32px">
+                                    <i class="fas fa-shield-alt text-primary small"></i>
+                                </div>
+                                <span class="small text-muted">1 Year Warranty</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="btn btn-light rounded-circle shadow-none p-0 d-flex align-items-center justify-content-center"
+                                    style="width:32px; height:32px">
+                                    <i class="fas fa-truck text-primary small"></i>
+                                </div>
+                                <span class="small text-muted">Free Shipping</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="actions-box sticky-sm-bottom bg-white p-4 rounded-5 shadow-lg border border-light d-flex gap-3 align-items-center">
+                        <div class="quantity-picker d-flex align-items-center bg-light rounded-pill p-1 pe-3">
+                            <button class="btn btn-white rounded-circle shadow-sm border-0"
+                                style="width:40px; height:40px" onclick="updateQty(-1)">-</button>
+                            <span class="px-4 fw-bold" id="productQty">1</span>
+                            <button class="btn btn-white rounded-circle shadow-sm border-0"
+                                style="width:40px; height:40px" onclick="updateQty(1)">+</button>
+                        </div>
+                        <button
+                            class="btn btn-primary flex-grow-1 rounded-pill py-3 fw-bold shadow-sm add-to-cart-btn-detail"
+                            data-id="<%= product._id %>" data-title="<%= product.title %>"
+                            data-price="<%= product.price %>" data-image="<%= product.image %>">
+                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products or Features -->
+        <div class="mt-5 pt-5 border-top border-light">
+            <h4 class="fw-bold mb-4">You might also like</h4>
+            <div class="row g-4" id="relatedProducts">
+                <!-- Related products could be injected here -->
+                <p class="text-muted small">Explore our full <a href="/" class="text-primary fw-bold">Catalog</a> for
+                    more premium designs.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentQty = 1;
+        function updateQty(val) {
+            currentQty = Math.max(1, currentQty + val);
+            document.getElementById('productQty').innerText = currentQty;
+        }
+
+        document.querySelector('.add-to-cart-btn-detail').addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const title = this.getAttribute('data-title');
+            const price = parseFloat(this.getAttribute('data-price'));
+            const image = this.getAttribute('data-image');
+
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            for (let i = 0; i < currentQty; i++) {
+                cart.push({ id, title, price, image });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            const countEl = document.getElementById('cartCount');
+            if (countEl) countEl.innerText = cart.length;
+
+            alert(`Added ${currentQty} item(s) to cart!`);
+        });
+    </script>
+
+    <style>
+        .breadcrumb-item+.breadcrumb-item::before {
+            content: "›";
+            font-size: 1.2rem;
+            line-height: 1;
+            vertical-align: middle;
+        }
+
+        .tracking-wider {
+            letter-spacing: 0.05em;
+        }
+
+        .leading-relaxed {
+            line-height: 1.7;
+        }
+    </style>
+
+    <%- include('partials/footer') %>

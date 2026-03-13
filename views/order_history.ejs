@@ -1,0 +1,87 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5 py-5">
+        <div class="d-flex align-items-center gap-3 mb-5">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 50px; height: 50px;">
+                <i class="fas fa-history"></i>
+            </div>
+            <h2 class="fw-bold mb-0">Order History</h2>
+        </div>
+
+        <% if (orders.length===0) { %>
+            <div class="text-center py-5 bg-white rounded-5 shadow-sm">
+                <div class="mb-4">
+                    <i class="fas fa-shopping-bag fa-4x text-light"></i>
+                </div>
+                <h4>No orders yet</h4>
+                <p class="text-muted">You haven't placed any orders yet. Start shopping to see them here.</p>
+                <a href="/" class="btn btn-primary rounded-pill px-5 mt-3">Browse Products</a>
+            </div>
+            <% } else { %>
+                <div class="row g-4">
+                    <% orders.reverse().forEach(order=> { %>
+                        <div class="col-12">
+                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-3">
+                                <div class="card-header bg-white border-bottom border-light p-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3">
+                                            <div class="text-muted small text-uppercase fw-bold">Order Placed</div>
+                                            <div class="fw-bold text-dark">
+                                                <%= order.createdAt.toLocaleDateString() %>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-muted small text-uppercase fw-bold">Total Amount</div>
+                                            <div class="fw-bold text-primary">$<%= order.totalAmount.toFixed(2) %>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="text-muted small text-uppercase fw-bold">Status</div>
+                                            <span class="badge rounded-pill bg-<%= 
+                                        order.status === 'Delivered' ? 'success' : 
+                                        (order.status === 'Pending' ? 'warning text-dark' : 'info') 
+                                    %> px-3">
+                                                <%= order.status %>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-3 text-md-end">
+                                            <div class="text-muted small text-uppercase fw-bold">Order #</div>
+                                            <div class="fw-bold text-dark">#<%=
+                                                    order._id.toString().slice(-8).toUpperCase() %>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body p-4">
+                                    <% order.items.forEach(item=> { %>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-light rounded-3 p-1 me-4" style="width: 60px; height: 60px;">
+                                                <img src="/uploads/<%= item.image %>" class="w-100 h-100"
+                                                    style="object-fit: contain;"
+                                                    onerror="this.src='https://via.placeholder.com/60?text=Shoe'">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h6 class="fw-bold mb-0 text-dark lowercase">
+                                                    <%= item.title %>
+                                                </h6>
+                                                <div class="text-muted small">Price: $<%= item.price %> | QTY: <%=
+                                                            item.quantity || 1 %>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <a href="/products/<%= item.product %>"
+                                                    class="btn btn-outline-primary btn-sm rounded-pill px-4 shadow-none">Buy
+                                                    Again</a>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
+                <% } %>
+    </div>
+
+    <%- include('partials/footer') %>

@@ -1,0 +1,91 @@
+<%- include('../partials/admin_header', { title: 'Create Footwear' , active: 'products' }) %>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-8">
+            <div class="card border-0 shadow-sm p-4 p-md-5">
+                <div class="text-center mb-5">
+                    <div class="icon-circle bg-accent-soft mx-auto mb-3"
+                        style="width: 80px; height: 80px; font-size: 2rem;">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <h4 class="fw-bold">New Product Details</h4>
+                    <p class="text-muted">Enter the specifications for your new footwear item.</p>
+                </div>
+
+                <form action="/admin/product" method="POST" enctype="multipart/form-data">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Product Title</label>
+                            <input type="text" name="title"
+                                class="form-control form-control-lg bg-light border-0 rounded-4 px-4" required
+                                placeholder="e.g. Air Jordan 1 Retro High">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Brand Name</label>
+                            <input type="text" name="brand"
+                                class="form-control form-control-lg bg-light border-0 rounded-4 px-4"
+                                placeholder="e.g. Nike">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Listing Category</label>
+                            <select name="category" class="form-select form-control-lg bg-light border-0 rounded-4 px-4"
+                                required>
+                                <option value="">Choose...</option>
+                                <% categories.forEach(c=> { %>
+                                    <option value="<%= c._id %>">
+                                        <%= c.name %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Selling Price ($)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0 rounded-start-4 ps-4">$</span>
+                                <input type="number" step="0.01" name="price"
+                                    class="form-control form-control-lg bg-light border-0 rounded-end-4 px-3" required
+                                    placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Initial Stock</label>
+                            <input type="number" name="stock"
+                                class="form-control form-control-lg bg-light border-0 rounded-4 px-4" required
+                                placeholder="0">
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Product Narrative</label>
+                            <textarea name="description" class="form-control bg-light border-0 rounded-4 px-4 py-3"
+                                rows="5"
+                                placeholder="Highlight special features like material, comfort level, style..."></textarea>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Display Image</label>
+                            <div class="p-5 border-2 border-dashed border-light rounded-4 text-center bg-light-subtle">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <input type="file" name="image" class="form-control border-0 bg-transparent shadow-none"
+                                    required>
+                                <p class="text-muted small mt-2">Only PNG, JPG or WEBP formats. Recommended resolution:
+                                    800x800px.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-3 justify-content-end mt-5">
+                        <a href="/admin/products" class="btn btn-light px-4 py-3 rounded-4 fw-bold">Discard Changes</a>
+                        <button type="submit" class="btn btn-primary px-5 py-3 rounded-4 shadow-sm">
+                            <i class="fas fa-save me-2"></i> Publish Product
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/admin_footer') %>

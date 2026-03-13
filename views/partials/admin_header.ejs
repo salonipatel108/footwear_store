@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - <%= title %>
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-bg: #111827;
+            --sidebar-hover: #1f2937;
+            --primary-accent: #6366f1;
+            --bg-body: #f9fafb;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            height: 100vh;
+            background: var(--sidebar-bg);
+            color: white;
+            position: fixed;
+            width: 260px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-brand {
+            padding: 30px 25px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .sidebar-nav {
+            padding: 20px 15px;
+        }
+
+        .nav-label {
+            padding: 10px 15px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .sidebar a {
+            color: #9ca3af;
+            text-decoration: none;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .sidebar a i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar a:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+
+        .sidebar a.active {
+            background: var(--primary-accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Main Content */
+        .main-wrapper {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-navbar {
+            background: white;
+            height: 70px;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .breadcrumb-item {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 5px 12px;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .user-profile:hover {
+            background: var(--bg-body);
+        }
+
+        .content-area {
+            padding: 30px;
+            flex-grow: 1;
+        }
+
+        /* Generic Cards */
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-card {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .icon-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .bg-accent-soft {
+            background: #eef2ff;
+            color: #6366f1;
+        }
+
+        .bg-success-soft {
+            background: #f0fdf4;
+            color: #22c55e;
+        }
+
+        .bg-warning-soft {
+            background: #fffbeb;
+            color: #f59e0b;
+        }
+
+        .bg-info-soft {
+            background: #f0f9ff;
+            color: #0ea5e9;
+        }
+
+        .btn-primary {
+            background: var(--primary-accent);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-bolt text-primary"></i>
+            AdminPanel
+        </div>
+        <div class="sidebar-nav">
+            <div class="nav-label">Main Menu</div>
+            <a href="/admin" class="<%= active === 'dashboard' ? 'active' : '' %>">
+                <i class="fas fa-grid-2"></i> Dashboard
+            </a>
+            <a href="/admin/products" class="<%= active === 'products' ? 'active' : '' %>">
+                <i class="fas fa-shopping-bag"></i> Products
+            </a>
+            <a href="/admin/categories" class="<%= active === 'categories' ? 'active' : '' %>">
+                <i class="fas fa-tags"></i> Categories
+            </a>
+
+            <div class="nav-label mt-4">Account</div>
+            <a href="/">
+                <i class="fas fa-eye"></i> View Shop
+            </a>
+            <a href="/auth/logout" class="text-danger mt-2">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <header class="top-navbar">
+            <div class="d-flex align-items-center gap-3">
+                <h5 class="mb-0 fw-bold text-dark">
+                    <%= title %>
+                </h5>
+            </div>
+
+            <div class="user-profile">
+                <div class="text-end d-none d-sm-block">
+                    <div class="fw-bold small line-height-1">
+                        <%= user.name %>
+                    </div>
+                    <div class="text-muted small">Store Owner</div>
+                </div>
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=<%= user.name %>"
+                    class="rounded-circle border bg-light" width="40">
+            </div>
+        </header>
+
+        <main class="content-area">

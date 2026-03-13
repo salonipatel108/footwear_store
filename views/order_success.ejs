@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5 py-5 text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="success-animation mb-4">
+                    <i class="fas fa-check-circle text-success" style="font-size: 100px;"></i>
+                </div>
+                <h1 class="fw-bold mb-3">Order Placed Successfully!</h1>
+                <p class="text-muted lead mb-5">Thank you for choosing FootwearX. Your order has been received and is
+                    being processed.</p>
+
+                <div class="card border-0 shadow-sm rounded-4 p-4 mb-5 bg-light">
+                    <div class="d-flex justify-content-between align-items-center mb-0">
+                        <span class="text-muted">Order ID:</span>
+                        <span class="fw-bold text-primary">#<%= orderId %></span>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="/orders/history" class="btn btn-primary rounded-pill px-5 py-3 fw-bold shadow-sm">View My
+                        Orders</a>
+                    <a href="/" class="btn btn-outline-dark rounded-pill px-5 py-3 fw-bold">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>

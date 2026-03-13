@@ -1,0 +1,231 @@
+<%- include('partials/header') %>
+
+    <div class="hero-section bg-dark text-white py-5 mb-5"
+        style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1552346154-21d32810aba3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80'); background-size: cover; background-position: center;">
+        <div class="container py-5 text-center">
+            <h1 class="display-3 fw-bold mb-3">STEP INTO STYLE</h1>
+            <p class="lead mb-4">Discover the latest collection of premium footwear for every occasion.</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="#productGrid" class="btn btn-primary btn-lg rounded-pill px-5">Shop Now</a>
+                <a href="/collections" class="btn btn-outline-light btn-lg rounded-pill px-5">View Collections</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row">
+            <!-- Filters Sidebar -->
+            <div class="col-md-3">
+                <div class="card p-4 shadow-sm border-0 rounded-4 sticky-top" style="top: 140px;">
+                    <h5 class="fw-bold mb-4 text-dark">Refine Results</h5>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Categories</label>
+                        <div id="categoryFilters">
+                            <% categories.forEach(cat=> { %>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input filter-check" type="checkbox" value="<%= cat._id %>"
+                                        id="cat-<%= cat._id %>" data-type="category"
+                                        <%=selectedCategory==cat._id.toString() ? 'checked' : '' %>>
+                                    <label class="form-check-label small" for="cat-<%= cat._id %>">
+                                        <%= cat.name %>
+                                    </label>
+                                </div>
+                                <% }) %>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted text-uppercase">Price Filter ($)</label>
+                        <div class="d-flex gap-2">
+                            <input type="number" id="minPrice"
+                                class="form-control form-control-sm border-light bg-light" placeholder="Min">
+                            <input type="number" id="maxPrice"
+                                class="form-control form-control-sm border-light bg-light" placeholder="Max">
+                        </div>
+                    </div>
+                    <button class="btn btn-dark w-100 rounded-pill py-2 fw-bold" onclick="applyFilters()">Apply
+                        Filters</button>
+                    <button class="btn btn-link w-100 text-muted small mt-2 text-decoration-none"
+                        onclick="location.reload()">Reset All</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="col-md-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0">Premium Catalog</h4>
+                    <span class="text-muted small">Showing all active results</span>
+                </div>
+                <div class="row g-4" id="productGrid">
+                    <% if (products.length===0) { %>
+                        <div class="col-12 text-center py-5">
+                            <h3>No products found.</h3>
+                        </div>
+                        <% } else { %>
+                            <% products.forEach(product=> { %>
+                                <div class="col-md-4 mb-4 product-item">
+                                    <div class="card h-100 product-card shadow-sm border-0 rounded-4 overflow-hidden">
+                                        <div class="position-relative">
+                                            <a href="/products/<%= product._id %>" class="text-decoration-none">
+                                                <% if (product.image) { %>
+                                                    <img src="/uploads/<%= product.image %>" class="card-img-top"
+                                                        alt="<%= product.title %>"
+                                                        style="height: 240px; object-fit: cover;">
+                                                    <% } else { %>
+                                                        <img src="https://via.placeholder.com/240x240?text=No+Image"
+                                                            class="card-img-top" alt="No image">
+                                                        <% } %>
+                                            </a>
+                                            <span
+                                                class="position-absolute top-0 end-0 m-3 badge <%= product.stock > 10 ? 'bg-success' : (product.stock > 0 ? 'bg-warning text-dark' : 'bg-danger') %> rounded-pill px-3">
+                                                <%= product.stock> 0 ? 'In Stock' : 'Out of Stock' %>
+                                            </span>
+                                        </div>
+                                        <div class="card-body p-4">
+                                            <div class="mb-2">
+                                                <span class="text-primary small fw-bold text-uppercase">
+                                                    <%= product.brand %>
+                                                </span>
+                                            </div>
+                                            <h5 class="card-title fw-bold">
+                                                <a href="/products/<%= product._id %>"
+                                                    class="text-dark text-decoration-none text-truncate d-block mb-2">
+                                                    <%= product.title %>
+                                                </a>
+                                            </h5>
+                                            <div class="d-flex justify-content-between align-items-end mt-4">
+                                                <div>
+                                                    <div class="text-muted small">Price</div>
+                                                    <div class="price-text mb-0">$<%= product.price %>
+                                                    </div>
+                                                </div>
+                                                <button class="btn btn-primary rounded-circle shadow-sm add-to-cart-btn"
+                                                    style="width: 45px; height: 45px;" data-id="<%= product._id %>"
+                                                    data-title="<%= product.title %>" data-price="<%= product.price %>"
+                                                    data-image="<%= product.image %>">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }) %>
+                                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        updateCartCount();
+
+        // Check for search query in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQ = urlParams.get('search');
+        if (searchQ) {
+            document.addEventListener('DOMContentLoaded', () => {
+                const searchInput = document.getElementById('globalSearchInput');
+                if (searchInput) {
+                    searchInput.value = searchQ;
+                    searchProducts();
+                }
+            });
+        }
+
+        document.addEventListener('click', function (e) {
+            if (e.target && e.target.closest('.add-to-cart-btn')) {
+                const btn = e.target.closest('.add-to-cart-btn');
+                const id = btn.getAttribute('data-id');
+                const title = btn.getAttribute('data-title');
+                const price = parseFloat(btn.getAttribute('data-price'));
+                const image = btn.getAttribute('data-image');
+                addToCart(id, title, price, image);
+            }
+        });
+
+        function addToCart(id, title, price, image) {
+            cart.push({ id, title, price, image });
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+            alert('Added to cart!');
+        }
+
+        function updateCartCount() {
+            const countEl = document.getElementById('cartCount');
+            if (countEl) countEl.innerText = cart.length;
+        }
+
+        async function searchProducts() {
+            const query = document.getElementById('globalSearchInput').value;
+            if (query.length < 2) {
+                if (query.length === 0) location.reload();
+                return;
+            }
+            const res = await fetch(`/products/search?q=${query}`);
+            const products = await res.json();
+            renderProducts(products);
+        }
+
+        async function applyFilters() {
+            const min = document.getElementById('minPrice').value;
+            const max = document.getElementById('maxPrice').value;
+            const selectedCats = Array.from(document.querySelectorAll('.filter-check:checked'))
+                .map(cb => cb.value);
+
+            let url = `/products/filter?`;
+            if (min) url += `minPrice=${min}&`;
+            if (max) url += `maxPrice=${max}&`;
+            if (selectedCats.length > 0) url += `category=${selectedCats.join(',')}`;
+
+            const res = await fetch(url);
+            const products = await res.json();
+            renderProducts(products);
+        }
+
+        function renderProducts(products) {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = '';
+            if (products.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center py-5"><h3>No products found.</h3></div>';
+                return;
+            }
+            products.forEach(p => {
+                grid.innerHTML += `
+        <div class="col-md-4 mb-4 product-item">
+          <div class="card h-100 product-card shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="position-relative">
+                <a href="/products/${p._id}">
+                    <img src="${p.image ? '/uploads/' + p.image : 'https://via.placeholder.com/240x240?text=No+Image'}" class="card-img-top" alt="${p.title}" style="height: 240px; object-fit: cover;">
+                </a>
+                <span class="position-absolute top-0 end-0 m-3 badge ${p.stock > 10 ? 'bg-success' : (p.stock > 0 ? 'bg-warning text-dark' : 'bg-danger')} rounded-pill px-3">
+                    ${p.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                </span>
+            </div>
+            <div class="card-body p-4">
+              <div class="mb-2">
+                <span class="text-primary small fw-bold text-uppercase">${p.brand || ''}</span>
+              </div>
+              <h5 class="card-title fw-bold">
+                  <a href="/products/${p._id}" class="text-dark text-decoration-none text-truncate d-block mb-2">
+                    ${p.title}
+                  </a>
+              </h5>
+              <div class="d-flex justify-content-between align-items-end mt-4">
+                <div>
+                  <div class="text-muted small">Price</div>
+                  <div class="price-text mb-0">$${p.price}</div>
+                </div>
+                <button class="btn btn-primary rounded-circle shadow-sm add-to-cart-btn" 
+                  style="width: 45px; height: 45px;"
+                  data-id="${p._id}" data-title="${p.title}" data-price="${p.price}" data-image="${p.image}">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+            });
+        }
+    </script>
+    <%- include('partials/footer') %>

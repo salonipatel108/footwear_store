@@ -1,0 +1,43 @@
+<%- include('partials/header') %>
+
+    <div class="container my-5 py-5">
+        <div class="text-center mb-5">
+            <span class="text-primary fw-bold text-uppercase small">Our Collections</span>
+            <h2 class="display-5 fw-bold text-dark">Shop by Category</h2>
+            <p class="text-muted">Explore our curated collections of high-quality footwear.</p>
+        </div>
+
+        <div class="row g-4">
+            <% categories.forEach(cat=> { %>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-5 overflow-hidden h-100 hover-lift transition-all">
+                        <div class="position-relative" style="height: 250px;">
+                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"
+                                class="w-100 h-100" style="object-fit: cover; opacity: 0.8;">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+                            <div class="position-absolute top-50 start-50 translate-middle text-center w-100">
+                                <h3 class="text-white fw-bold mb-3">
+                                    <%= cat.name %>
+                                </h3>
+                                <a href="/?category=<%= cat._id %>"
+                                    class="btn btn-light rounded-pill px-4 fw-bold">Explore Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+    </div>
+
+    <style>
+        .hover-lift:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .transition-all {
+            transition: 0.3s;
+        }
+    </style>
+
+    <%- include('partials/footer') %>
