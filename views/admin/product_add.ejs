@@ -30,12 +30,25 @@
 
                         <div class="col-md-6">
                             <label class="form-label fw-bold small text-muted text-uppercase">Listing Category</label>
-                            <select name="category" class="form-select form-control-lg bg-light border-0 rounded-4 px-4"
-                                required>
+                            <select name="category" id="categorySelect"
+                                class="form-select form-control-lg bg-light border-0 rounded-4 px-4" required>
                                 <option value="">Choose...</option>
                                 <% categories.forEach(c=> { %>
                                     <option value="<%= c._id %>">
                                         <%= c.name %>
+                                    </option>
+                                    <% }) %>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold small text-muted text-uppercase">Subcategory</label>
+                            <select name="subcategory" id="subcategorySelect"
+                                class="form-select form-control-lg bg-light border-0 rounded-4 px-4">
+                                <option value="">Choose Subcategory...</option>
+                                <% subcategories.forEach(s=> { %>
+                                    <option value="<%= s._id %>" data-category="<%= s.category %>">
+                                        <%= s.name %>
                                     </option>
                                     <% }) %>
                             </select>
@@ -88,4 +101,26 @@
         </div>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const catSelect = document.getElementById('categorySelect');
+            const subSelect = document.getElementById('subcategorySelect');
+            if (catSelect && subSelect) {
+                const allSubOptions = Array.from(subSelect.options).filter(opt => opt.value !== "");
+
+                function filterSubcategories() {
+                    const catId = catSelect.value;
+                    // Keep only the 'Choose...' placeholder and matching options
+                    subSelect.innerHTML = '<option value="">Choose Subcategory...</option>';
+                    allSubOptions.forEach(opt => {
+                        if (opt.dataset.category === catId) {
+                            subSelect.appendChild(opt);
+                        }
+                    });
+                }
+                catSelect.addEventListener('change', filterSubcategories);
+                filterSubcategories(); // run immediately to hide non-matching
+            }
+        });
+    </script>
     <%- include('../partials/admin_footer') %>
