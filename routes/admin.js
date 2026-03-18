@@ -87,19 +87,31 @@ router.post('/subcategory', async (req, res) => {
 
 // Product Action - Add
 router.post('/product', upload.single('image'), async (req, res) => {
-    const { title, description, price, stock, category, subcategory, brand } = req.body;
-    const image = req.file ? req.file.filename : '';
-    await Product.create({ title, description, price, stock, category, subcategory, image, brand });
-    res.redirect('/admin/products');
+    try {
+        const { title, description, price, stock, category, brand } = req.body;
+        const subcategory = req.body.subcategory || null;
+        const image = req.file ? req.file.filename : '';
+        await Product.create({ title, description, price, stock, category, subcategory, image, brand });
+        res.redirect('/admin/products');
+    } catch (error) {
+        console.error("Error creating product:", error);
+        res.status(500).send('Internal Server Error: ' + error.message);
+    }
 });
 
 // Product Action - Edit
 router.post('/product/edit/:id', upload.single('image'), async (req, res) => {
-    const { title, description, price, stock, category, subcategory, brand } = req.body;
-    const updateData = { title, description, price, stock, category, subcategory, brand };
-    if (req.file) updateData.image = req.file.filename;
-    await Product.findByIdAndUpdate(req.params.id, updateData);
-    res.redirect('/admin/products');
+    try {
+        const { title, description, price, stock, category, brand } = req.body;
+        const subcategory = req.body.subcategory || null;
+        const updateData = { title, description, price, stock, category, subcategory, brand };
+        if (req.file) updateData.image = req.file.filename;
+        await Product.findByIdAndUpdate(req.params.id, updateData);
+        res.redirect('/admin/products');
+    } catch (error) {
+        console.error("Error updating product:", error);
+        res.status(500).send('Internal Server Error: ' + error.message);
+    }
 });
 
 // Product Action - Delete
