@@ -69,7 +69,7 @@
                                                 <% if (product.image) { %>
                                                     <img src="/uploads/<%= product.image %>" class="card-img-top"
                                                         alt="<%= product.title %>"
-                                                        style="height: 240px; object-fit: cover;">
+                                                        style="height: 240px; object-fit: contain;">
                                                     <% } else { %>
                                                         <img src="https://via.placeholder.com/240x240?text=No+Image"
                                                             class="card-img-top" alt="No image">
@@ -195,7 +195,7 @@
           <div class="card h-100 product-card shadow-sm border-0 rounded-4 overflow-hidden">
             <div class="position-relative">
                 <a href="/products/${p._id}">
-                    <img src="${p.image ? '/uploads/' + p.image : 'https://via.placeholder.com/240x240?text=No+Image'}" class="card-img-top" alt="${p.title}" style="height: 240px; object-fit: cover;">
+                    <img src="${p.image ? '/uploads/' + p.image : 'https://via.placeholder.com/240x240?text=No+Image'}" class="card-img-top" alt="${p.title}" style="height: 240px; object-fit: contain;">
                 </a>
                 <span class="position-absolute top-0 end-0 m-3 badge ${p.stock > 10 ? 'bg-success' : (p.stock > 0 ? 'bg-warning text-dark' : 'bg-danger')} rounded-pill px-3">
                     ${p.stock > 0 ? 'In Stock' : 'Out of Stock'}
