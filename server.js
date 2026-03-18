@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const connectDB = require('./config/db');
 
 // Connect to Database
@@ -24,6 +25,7 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'secret',
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI || 'mongodb://localhost:27017/footwear_store' }),
     cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24 hours
 }));
 
