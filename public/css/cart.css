@@ -31,7 +31,7 @@ h2 {
 .cardthumbnail img {
   border-radius: 12px;
   max-height: 200px;
-  object-fit: cover;
+  object-fit: contain;
 }
 .cart-summary {
   border-top: 2px solid #ddd;
