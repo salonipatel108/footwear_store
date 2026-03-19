@@ -86,8 +86,13 @@
                                         <div class="d-flex align-items-center gap-3">
                                             <div class="bg-light rounded-3"
                                                 style="width: 48px; height: 48px; padding: 2px;">
-                                                <img src="/uploads/<%= p.image %>" class="rounded-3 w-100 h-100"
-                                                    style="object-fit: contain;">
+                                                <% if (p.image && p.image.startsWith('data:image')) { %>
+                                                    <img src="<%= p.image %>" class="rounded-3 w-100 h-100"
+                                                        style="object-fit: contain;">
+                                                    <% } else { %>
+                                                        <img src="/uploads/<%= p.image %>" class="rounded-3 w-100 h-100"
+                                                            style="object-fit: contain;">
+                                                        <% } %>
                                             </div>
                                             <div>
                                                 <div class="fw-bold">
@@ -109,8 +114,8 @@
                                     <td>
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="progress flex-grow-1" style="height: 6px; width: 60px;">
-                                                <div class="progress-bar bg-primary"
-                                                    style="width: <%= Math.min(p.stock, 100) + '%' %>"></div>
+                                                <div class="progress-bar bg-primary" style=<%- '"width:' +
+                                                    Math.min(p.stock, 100) + '%;"' %>></div>
                                             </div>
                                             <span class="small fw-500">
                                                 <%= p.stock %>

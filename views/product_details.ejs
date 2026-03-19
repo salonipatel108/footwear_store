@@ -19,17 +19,22 @@
                 <div class="product-gallery bg-white p-4 rounded-5 shadow-sm border border-light overflow-hidden">
                     <div class="main-image-container position-relative">
                         <% if (product.image) { %>
-                            <img src="/uploads/<%= product.image %>" class="img-fluid w-100 rounded-4"
-                                alt="<%= product.title %>" style="max-height: 500px; object-fit: contain;">
-                            <% } else { %>
-                                <img src="https://via.placeholder.com/600x600?text=Premium+Footwear"
-                                    class="img-fluid w-100 rounded-4" alt="No image">
-                                <% } %>
-                                    <div class="badge-featured position-absolute top-0 start-0 m-3">
-                                        <span
-                                            class="badge bg-dark rounded-pill px-3 py-2 uppercase letter-spacing-1">Premium
-                                            Collection</span>
-                                    </div>
+                            <% if (product.image.startsWith('data:image')) { %>
+                                <img src="<%= product.image %>" class="img-fluid w-100 rounded-4"
+                                    alt="<%= product.title %>" style="max-height: 500px; object-fit: contain;">
+                                <% } else { %>
+                                    <img src="/uploads/<%= product.image %>" class="img-fluid w-100 rounded-4"
+                                        alt="<%= product.title %>" style="max-height: 500px; object-fit: contain;">
+                                    <% } %>
+                                        <% } else { %>
+                                            <img src="https://via.placeholder.com/600x600?text=Premium+Footwear"
+                                                class="img-fluid w-100 rounded-4" alt="No image">
+                                            <% } %>
+                                                <div class="badge-featured position-absolute top-0 start-0 m-3">
+                                                    <span
+                                                        class="badge bg-dark rounded-pill px-3 py-2 uppercase letter-spacing-1">Premium
+                                                        Collection</span>
+                                                </div>
                     </div>
                 </div>
             </div>

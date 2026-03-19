@@ -117,7 +117,7 @@
                 return `
                 <div class="d-flex align-items-center mb-3">
                     <div class="bg-light rounded-3 p-1 me-3" style="width: 50px; height: 50px;">
-                        <img src="/uploads/${item.image}" class="w-100 h-100" style="object-fit: contain;" onerror="this.src='https://via.placeholder.com/50?text=Shoe'">
+                        <img src="${item.image && item.image.startsWith('data:image') ? item.image : '/uploads/' + item.image}" class="w-100 h-100" style="object-fit: contain;" onerror="this.src='https://via.placeholder.com/50?text=Shoe'">
                     </div>
                     <div class="flex-grow-1">
                         <div class="small fw-bold text-dark text-truncate" style="max-width: 180px;">${item.title}</div>
