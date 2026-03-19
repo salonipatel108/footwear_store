@@ -7,13 +7,8 @@ const Subcategory = require('../models/Subcategory');
 const multer = require('multer');
 const path = require('path');
 
-// Multer Config
-const storage = multer.diskStorage({
-    destination: './uploads/',
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-});
+// Multer Config - Memory Storage to save image in MongoDB and prevent restart/loss
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 const Order = require('../models/Order');
@@ -90,7 +85,10 @@ router.post('/product', upload.single('image'), async (req, res) => {
     try {
         const { title, description, price, stock, category, brand } = req.body;
         const subcategory = req.body.subcategory || null;
-        const image = req.file ? req.file.filename : '';
+        let image = '';
+        if (req.file) {
+            image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+        }
         await Product.create({ title, description, price, stock, category, subcategory, image, brand });
         res.redirect('/admin/products');
     } catch (error) {
@@ -105,7 +103,9 @@ router.post('/product/edit/:id', upload.single('image'), async (req, res) => {
         const { title, description, price, stock, category, brand } = req.body;
         const subcategory = req.body.subcategory || null;
         const updateData = { title, description, price, stock, category, subcategory, brand };
-        if (req.file) updateData.image = req.file.filename;
+        if (req.file) {
+            updateData.image = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+        }
         await Product.findByIdAndUpdate(req.params.id, updateData);
         res.redirect('/admin/products');
     } catch (error) {

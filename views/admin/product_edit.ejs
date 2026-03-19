@@ -86,9 +86,15 @@
                                 <div class="col-md-4">
                                     <div class="bg-light p-3 rounded-4 border border-light text-center h-100">
                                         <p class="small text-muted mb-2">Current Image</p>
-                                        <img src="/uploads/<%= product.image %>"
-                                            class="rounded-3 shadow-sm border w-100 h-100"
-                                            style="object-fit: contain; max-height: 120px;">
+                                        <% if (product.image && product.image.startsWith('data:image')) { %>
+                                            <img src="<%= product.image %>"
+                                                class="rounded-3 shadow-sm border w-100 h-100"
+                                                style="object-fit: contain; max-height: 120px;">
+                                            <% } else { %>
+                                                <img src="/uploads/<%= product.image %>"
+                                                    class="rounded-3 shadow-sm border w-100 h-100"
+                                                    style="object-fit: contain; max-height: 120px;">
+                                                <% } %>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
